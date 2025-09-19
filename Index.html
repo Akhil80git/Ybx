@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drum Machine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background-color: #3a5776;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        #drum-machine {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .display-container {
+            width: 100%;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        #display {
+            background-color: #4a6491;
+            color: white;
+            font-size: 1.8rem;
+            padding: 15px;
+            border-radius: 5px;
+            min-height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        
+        .drum-pads {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .drum-pad {
+            background: linear-gradient(145deg, #4a6491, #3a5776);
+            border: none;
+            border-radius: 8px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3),
+                        -2px -2px 5px rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .drum-pad:active, .drum-pad.playing {
+            box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.3),
+                        inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+            transform: translateY(2px);
+            background: linear-gradient(145deg, #3a5776, #4a6491);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 45%;
+        }
+        
+        .control p {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .power {
+            display: flex;
+            background-color: #2c3e50;
+            border-radius: 30px;
+            padding: 5px;
+            width: 100%;
+        }
+        
+        .power-btn {
+            width: 50%;
+            text-align: center;
+            padding: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .power-on {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .power-off {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .volume-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #2c3e50;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        .bank {
+            display: flex;
+            background-color: #2c3e50;
+            border-radius: 30px;
+            padding: 5px;
+            width: 100%;
+        }
+        
+        .bank-btn {
+            width: 50%;
+            text-align: center;
+            padding: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bank-active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (min-width: 600px) {
+            #drum-machine {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            
+            .display-container {
+                width: 40%;
+            }
+            
+            .drum-pads {
+                width: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="drum-machine">
+            <div class="display-container">
+                <div id="display">Drum Machine</div>
+                <div class="controls">
+                    <div class="control">
+                        <p>Power</p>
+                        <div class="power">
+                            <div class="power-btn power-on">ON</div>
+                            <div class="power-btn power-off">OFF</div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <p>Volume</p>
+                        <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volume-slider">
+                    </div>
+                    <div class="control">
+                        <p>Bank</p>
+                        <div class="bank">
+                            <div class="bank-btn bank-active">Heater</div>
+                            <div class="bank-btn">Piano</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="drum-pads">
+                <button class="drum-pad" id="Q">Q</button>
+                <button class="drum-pad" id="W">W</button>
+                <button class="drum-pad" id="E">E</button>
+                <button class="drum-pad" id="A">A</button>
+                <button class="drum-pad" id="S">S</button>
+                <button class="drum-pad" id="D">D</button>
+                <button class="drum-pad" id="Z">Z</button>
+                <button class="drum-pad" id="X">X</button>
+                <button class="drum-pad" id="C">C</button>
+            </div>
+        </div>
+        <div class="footer">
+            Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> by <a href="https://www.freecodecamp.org/" target="_blank">FreeCodeCamp</a>
+        </div>
+    </div>
+
+    <script>
+        // Audio elements for Heater Kit
+        const heaterKit = {
+            Q: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3"),
+            W: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3"),
+            E: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3"),
+            A: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3"),
+            S: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3"),
+            D: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3"),
+            Z: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3"),
+            X: new Audio("https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3"),
+            C: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3")
+        };
+        
+        // Audio elements for Piano Kit
+        const pianoKit = {
+            Q: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"),
+            W: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Chord_2.mp3"),
+            E: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Chord_3.mp3"),
+            A: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3"),
+            S: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Dry_Ohh.mp3"),
+            D: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3"),
+            Z: new Audio("https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3"),
+            X: new Audio("https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3"),
+            C: new Audio("https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3")
+        };
+        
+        // Sound names for display
+        const soundNames = {
+            heater: {
+                Q: "Heater 1",
+                W: "Heater 2",
+                E: "Heater 3",
+                A: "Heater 4",
+                S: "Clap",
+                D: "Open-HH",
+                Z: "Kick-n'-Hat",
+                X: "Kick",
+                C: "Closed-HH"
+            },
+            piano: {
+                Q: "Chord 1",
+                W: "Chord 2",
+                E: "Chord 3",
+                A: "Shaker",
+                S: "Open-HH",
+                D: "Closed-HH",
+                Z: "Punchy Kick",
+                X: "Side Stick",
+                C: "Snare"
+            }
+        };
+        
+        // DOM elements
+        const display = document.getElementById('display');
+        const drumPads = document.querySelectorAll('.drum-pad');
+        const volumeSlider = document.getElementById('volume-slider');
+        const powerButtons = document.querySelectorAll('.power-btn');
+        const bankButtons = document.querySelectorAll('.bank-btn');
+        
+        // Current state
+        let powerOn = true;
+        let currentBank = 'heater';
+        let volume = 0.5;
+        
+        // Set volume for all audio elements
+        function setVolume(vol) {
+            volume = vol;
+            // Set volume for both kits
+            for (const key in heaterKit) {
+                heaterKit[key].volume = vol;
+            }
+            for (const key in pianoKit) {
+                pianoKit[key].volume = vol;
+            }
+        }
+        
+        // Play sound function
+        function playSound(key) {
+            if (!powerOn) return;
+            
+            const pad = document.getElementById(key);
+            if (!pad) return;
+            
+            // Add playing class for visual feedback
+            pad.classList.add('playing');
+            
+            // Play the sound based on current bank
+            let sound;
+            if (currentBank === 'heater') {
+                sound = heaterKit[key];
+                display.textContent = soundNames.heater[key];
+            } else {
+                sound = pianoKit[key];
+                display.textContent = soundNames.piano[key];
+            }
+            
+            // Reset and play the sound
+            sound.currentTime = 0;
+            sound.play();
+            
+            // Remove playing class after animation
+            setTimeout(() => {
+                pad.classList.remove('playing');
+            }, 100);
+        }
+        
+        // Set up event listeners for drum pads
+        drumPads.forEach(pad => {
+            pad.addEventListener('click', () => {
+                playSound(pad.id);
+            });
+        });
+        
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (!powerOn) return;
+            
+            const key = e.key.toUpperCase();
+            if (['Q','W','E','A','S','D','Z','X','C'].includes(key)) {
+                playSound(key);
+            }
+        });
+        
+        // Volume control
+        volumeSlider.addEventListener('input', () => {
+            setVolume(parseFloat(volumeSlider.value));
+            if (powerOn) {
+                display.textContent = `Volume: ${Math.round(volume * 100)}%`;
+                setTimeout(() => {
+                    display.textContent = currentBank === 'heater' ? 'Heater Kit' : 'Piano Kit';
+                }, 1000);
+            }
+        });
+        
+        // Power control
+        powerButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('power-on')) {
+                    powerOn = true;
+                    display.textContent = currentBank === 'heater' ? 'Heater Kit' : 'Piano Kit';
+                } else {
+                    powerOn = false;
+                    display.textContent = "";
+                }
+            });
+        });
+        
+        // Bank control
+        bankButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.textContent === 'Heater') {
+                    currentBank = 'heater';
+                    display.textContent = 'Heater Kit';
+                } else {
+                    currentBank = 'piano';
+                    display.textContent = 'Piano Kit';
+                }
+                
+                // Update active bank button
+                bankButtons.forEach(b => b.classList.remove('bank-active'));
+                btn.classList.add('bank-active');
+            });
+        });
+        
+        // Initialize volume
+        setVolume(0.5);
+    </script>
+</body>
+  </html>
